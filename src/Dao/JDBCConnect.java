@@ -13,7 +13,7 @@ import java.sql.*;
  */
 public class JDBCConnect {
     public static Connection getJDBCConnection() throws SQLException {
-        final String url = "jdbc:sqlserver://HOME-SINGLE:1433;databaseName = BooksList";
+        final String url = "jdbc:sqlserver://SAMURISEEE:1433;databaseName = BooksList";
         final String login = "sa";
         final String password = "cabber123";
         

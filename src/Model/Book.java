@@ -14,24 +14,24 @@ public class Book {
     private String bookName;
     private int price;
     
-    private int getID() {
+    public int getID() {
         return id;
     }
-    private void setID(int id) {
+    public void setID(int id) {
         this.id = id;
     }
     
-    private String getBookName() {
+    public String getBookName() {
         return bookName;
     }
-    private void setBookName(String bookName) {
+    public void setBookName(String bookName) {
         this.bookName = bookName;
     }
     
-    private int getPrice() {
+    public int getPrice() {
         return price;
     }
-    private void setprice(int price) {
+    public void setprice(int price) {
         this.price = price;
     }
 }
