@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import Model.Book;
+import javax.swing.table.TableRowSorter;
 import services.BookService;
 
 /**
@@ -74,6 +75,7 @@ public class BookList extends javax.swing.JFrame {
         Search = new javax.swing.JTextField();
         AddButton = new javax.swing.JButton();
         DeleteButton = new javax.swing.JButton();
+        EditButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -92,13 +94,19 @@ public class BookList extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
 
+        Search.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SearchKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Search, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                .addComponent(Search, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -109,17 +117,24 @@ public class BookList extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        AddButton.setText("Add");
+        AddButton.setText("Them");
         AddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AddButtonActionPerformed(evt);
             }
         });
 
-        DeleteButton.setText("Delete");
+        DeleteButton.setText("Xoa");
         DeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DeleteButtonActionPerformed(evt);
+            }
+        });
+
+        EditButton.setText("Sua");
+        EditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditButtonActionPerformed(evt);
             }
         });
 
@@ -129,13 +144,16 @@ public class BookList extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(45, 45, 45)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AddButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(DeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(AddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(EditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
@@ -148,13 +166,17 @@ public class BookList extends javax.swing.JFrame {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(37, 37, 37)
-                        .addComponent(AddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(AddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(EditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
         );
+
+        EditButton.getAccessibleContext().setAccessibleDescription("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -187,13 +209,39 @@ public class BookList extends javax.swing.JFrame {
                 try {
                     bookSer.DeleteBook(bookID);
                     defaultTableModel.setRowCount(0);
+                    setTableData(bookSer.getAllBooks());
                 } catch (SQLException ex) {
                     Logger.getLogger(BookList.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                BookTable.revalidate();
+                
             }
         }
     }//GEN-LAST:event_DeleteButtonActionPerformed
+    public DefaultTableModel getModelTable() {
+        DefaultTableModel model = (DefaultTableModel)BookTable.getModel();
+        return model;
+    }
+    
+    public void searchTable(String value) {
+        TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>(getModelTable());
+        BookTable.setRowSorter(trs);
+        trs.setRowFilter(RowFilter.regexFilter(value));
+    }
+    
+    private void SearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchKeyReleased
+        searchTable(Search.getText());
+    }//GEN-LAST:event_SearchKeyReleased
+
+    private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditButtonActionPerformed
+        int row = BookTable.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(BookList.this, "Chon sach muon sua", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            int bookID = Integer.valueOf(String.valueOf(BookTable.getValueAt(row, 0)));
+            this.dispose();
+            new EditBook().setVisible(true);    
+        }
+    }//GEN-LAST:event_EditButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -238,6 +286,7 @@ public class BookList extends javax.swing.JFrame {
     private javax.swing.JButton AddButton;
     private javax.swing.JTable BookTable;
     private javax.swing.JButton DeleteButton;
+    private javax.swing.JButton EditButton;
     private javax.swing.JTextField Search;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

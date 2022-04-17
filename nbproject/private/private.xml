@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/netbean%20project/BookList/src/view/BookList.java</file>
+            <file>file:/D:/netbean%20project/BookList/src/view/AddNewBook.java</file>
             <file>file:/D:/netbean%20project/BookList/src/services/BookService.java</file>
             <file>file:/D:/netbean%20project/BookList/src/Dao/JDBCConnect.java</file>
+            <file>file:/D:/netbean%20project/BookList/src/view/EditBook.java</file>
             <file>file:/D:/netbean%20project/BookList/src/Dao/BookListDao.java</file>
             <file>file:/D:/netbean%20project/BookList/src/Model/Book.java</file>
         </group>

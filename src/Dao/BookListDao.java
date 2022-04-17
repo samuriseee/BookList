@@ -76,5 +76,10 @@ public class BookListDao {
             e.printStackTrace();
         }
     }
+
+    public void UpdateBook(int row) {
+        
+
+    }
     
 }

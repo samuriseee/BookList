@@ -31,4 +31,9 @@ public class BookService {
     public void AddBook(String title, int price) throws SQLException {
         booklistDao.AddBook(title,price);
     }
+
+    public void UpdateBook(int bookID) {
+        booklistDao.UpdateBook(bookID);
+    }
+    
 }
