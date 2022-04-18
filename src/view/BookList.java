@@ -233,14 +233,14 @@ public class BookList extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchKeyReleased
 
     private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditButtonActionPerformed
-        int row = BookTable.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(BookList.this, "Chon sach muon sua", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int bookID = Integer.valueOf(String.valueOf(BookTable.getValueAt(row, 0)));
+        
             this.dispose();
-            new EditBook().setVisible(true);    
+        try {    
+            new EditBook().setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(BookList.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_EditButtonActionPerformed
 
     /**

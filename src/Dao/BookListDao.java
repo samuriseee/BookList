@@ -76,10 +76,50 @@ public class BookListDao {
             e.printStackTrace();
         }
     }
+        public Book getBookById(int id) throws SQLException {
 
-    public void UpdateBook(int row) {
-        
+        Connection connection = JDBCConnect.getJDBCConnection();
 
+        String sql = "SELECT * FROM books WHERE ID = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                Book book = new Book();
+
+                book.setID(rs.getInt("id"));
+                book.setBookName(rs.getString("bookName"));
+                book.setprice(rs.getInt("price"));
+
+                return book;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void UpdateBook(Book book) throws SQLException {
+        Connection connection = JDBCConnect.getJDBCConnection();
+
+        String sql = "UPDATE books SET bookName = ?,price = ? WHERE id=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, book.getBookName());
+            preparedStatement.setInt(2, book.getPrice());
+            preparedStatement.setInt(3, book.getID());
+
+            int rs = preparedStatement.executeUpdate();
+            System.out.println(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
 }

@@ -32,8 +32,8 @@ public class BookService {
         booklistDao.AddBook(title,price);
     }
 
-    public void UpdateBook(int bookID) {
-        booklistDao.UpdateBook(bookID);
+    public void UpdateBook(Book book) throws SQLException {
+        booklistDao.UpdateBook(book);
     }
     
 }
