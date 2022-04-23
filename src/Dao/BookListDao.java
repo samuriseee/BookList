@@ -66,7 +66,7 @@ public class BookListDao {
         Connection connection = JDBCConnect.getJDBCConnection();
 
         String sql = "insert into books values ('" + title + "'," + price + ")" ;
-
+    
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             int rs = preparedStatement.executeUpdate();
